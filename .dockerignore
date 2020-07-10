@@ -1,5 +1,12 @@
+apt-cacher-ng/
+.git/objects/*
+simple-docker.sh
+out/
+
 output/
 work/
 deploy/
-apt-cacher-ng/
-.git/objects/*
+stage*
+scripts/
+export-*
+build*

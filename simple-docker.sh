@@ -9,4 +9,5 @@ docker build -t pi-gen .
 docker run -it \
 	--privileged \
 	--volume "$CONFIG_FILE:/config:ro" \
+	--volume "$(pwd)/out/:/pi-gen/out/" \
 	pi-gen

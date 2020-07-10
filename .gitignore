@@ -1,3 +1,5 @@
+out/
+
 deploy/*
 work/*
 config
@@ -7,3 +9,5 @@ SKIP_IMAGES
 .pc
 *-pc
 apt-cacher-ng/
+
+/stage*

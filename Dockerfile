@@ -26,15 +26,12 @@ RUN apt-get -y install --no-install-recommends \
         xxd                              \
         xz-utils                          \
         zerofree                           \
-        zip \
-        nano
+        zip                                 \
+        nano tree jq
 
 COPY .  /pi-gen/
 WORKDIR /pi-gen/
 
-VOLUME [ "/pi-gen/work", "/pi-gen/deploy" ]
-VOLUME /pi-gen/dest
-VOLUME /pi-gen/build
-
+VOLUME /pi-gen/out
 
 ENTRYPOINT ["/pi-gen/simple.sh"]

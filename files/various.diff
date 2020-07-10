@@ -51,9 +51,12 @@
 -ENV_PATH	PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
 +ENV_PATH	PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
 
+ #
+ # Terminal permissions
+
 --- a/etc/profile
 +++ b/etc/profile
-@@ -4,7 +4,7 @@
+@@ -4,6 +4,6 @@
  if [ "`id -u`" -eq 0 ]; then
    PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
  else
