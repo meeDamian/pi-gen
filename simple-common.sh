@@ -32,6 +32,13 @@ discard()    { rm -f                       "$WORK"/$1 && info "del: $1" ;}
 write()      { mkpath "$2" && echo "$1" >  "$WORK/$2" && info "set: $2" ;}
 append()     { mkpath "$2" && echo "$1" >> "$WORK/$2" && info "app: $2" ;}
 substitute() { sed -i "s|$1|$2|g"          "$WORK/$3" && info "mod: $3" ;}
+patch_file() {
+	if ! patch "$WORK/$1" "$FILES/$1.patch"; then
+		warn "Patching '$1' failed"
+		return 1
+	fi
+	info "pch: $1"
+}
 
 chroot_run() {
 	mounted() { mount | grep -q "$(realpath "$WORK/$1")"; }

@@ -172,9 +172,7 @@ ok
 
 section "Setting up users: $USER & root"
 # src: stage1/01-sys-tweaks/00-patches/01-bashrc.diff
-if ! patch -d "$WORK" -p1 < "$FILES/bashrc.diff"; then
-	warn "Unable to patch 'etc/skel/.bashrc'. Not very critical, so continuing…"
-fi
+patch_file etc/skel/.bashrc
 
 # src: stage1/01-sys-tweaks/00-run.sh
 transfer etc/systemd/system/getty@tty1.service.d/noclear.conf
@@ -219,9 +217,11 @@ $(cat "$FILES/input-debconf")
 SELEOF
 EOF
 env
+info 'Keyboard preset'
 
 # src: stage2/01-sys-tweaks/00-packages-nr
 chroot_install --no-install-recommends cifs-utils
+info 'Installed deps (pre)'
 
 # src: stage2/01-sys-tweaks/00-packages
 chroot_install ssh less fbset sudo psmisc strace ed ncdu crda console-setup keyboard-configuration debconf-utils    \
@@ -230,11 +230,17 @@ chroot_install ssh less fbset sudo psmisc strace ed ncdu crda console-setup keyb
 	libraspberrypi-doc libfreetype6-dev dosfstools dphys-swapfile raspberrypi-sys-mods pi-bluetooth apt-listchanges \
 	usb-modeswitch libpam-chksshpwd rpi-update libmtp-runtime rsync htop man-db policykit-1 ssh-import-id rng-tools \
 	ethtool vl805fw ntfs-3g pciutils rpi-eeprom raspinfo
+info 'Installed deps'
 
-# src: stage2/01-sys-tweaks/00-patches/*.patch
-if ! patch -d "$WORK" -p1 < "$FILES/various.diff"; then
-	error "Applying 'various.diff' failed"
-fi
+# src: stage2/01-sys-tweaks/00-patches/*.diff
+patch_file etc/default/useradd
+patch_file etc/dphys-swapfile
+patch_file etc/inputrc
+patch_file etc/login.defs
+patch_file etc/profile
+
+patch_file boot/cmdline.txt   # TODO: stupid to patch own file…
+ok 'Files patched'
 
 # src: stage2/01-sys-tweaks/01-run.sh
 transfer etc/init.d/resize2fs_once 755
@@ -242,6 +248,7 @@ transfer etc/systemd/system/rc-local.service.d/ttyoutput.conf
 transfer etc/apt/apt.conf.d/50raspi
 transfer etc/default/console-setup
 transfer etc/rc.local 755
+ok 'Files copied'
 
 if ! empty "$qemu"; then
 	transfer etc/udev/rules.d/90-qemu.rules
@@ -256,6 +263,7 @@ systemctl "${SSH:-disable}"      ssh
 systemctl enable                 regenerate_ssh_host_keys
 systemctl "${RESIZE2FS:-enable}" resize2fs_once
 EOF
+info 'Init state of systemctl services set'
 
 discard 'etc/ssh/ssh_host_*_key*'
 
@@ -325,11 +333,10 @@ section "Time zoning"
 # src: stage2/03-set-timezone/02-run.sh
 write "$TIMEZONE_DEFAULT" etc/timezone
 discard etc/localtime
-
 chroot_run1 dpkg-reconfigure -f noninteractive tzdata
 ok
 
 
 section "Damian's opinionated final touches"
-chroot_install git nano tree htop jq
+chroot_install git nano tree jq
 ok
