@@ -1,0 +1,7 @@
+deb MIRROR RELEASE main contrib non-free
+deb MIRROR-security/ RELEASE/updates main contrib non-free
+deb MIRROR RELEASE-updates main contrib non-free
+# Uncomment deb-src lines below then 'apt-get update' to enable 'apt-get source'
+#deb-src MIRROR RELEASE main contrib non-free
+#deb-src MIRROR-security/ RELEASE/updates main contrib non-free
+#deb-src MIRROR RELEASE-updates main contrib non-free

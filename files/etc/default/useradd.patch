@@ -1,0 +1,8 @@
+8c8
+< SHELL=/bin/sh
+---
+> SHELL=/bin/bash
+32c32
+< # SKEL=/etc/skel
+---
+> SKEL=/etc/skel

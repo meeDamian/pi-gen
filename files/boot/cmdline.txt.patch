@@ -1,0 +1,4 @@
+1c1
+< console=serial0,115200 console=tty1 root=ROOTDEV rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
+---
+> console=serial0,115200 console=tty1 root=ROOTDEV rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet init=/usr/lib/raspi-config/init_resize.sh
