@@ -11,7 +11,7 @@ MNT="$DIR/mnt"   ; mkdir -p "$MNT"
 LOGFILE="$OUTPUT/$(basename "${0%.*}").log"
 
 # shellcheck disable=SC2059
-log()     { printf "$*\n" | tee /dev/stderr | xargs -I{} date +"[%T] {}" >>"$LOGFILE" ;}
+log()     { printf "$*\n" | tee /dev/stderr | xargs -d'\n' -I{} date +"[%T] {}" >>"$LOGFILE" ;}
 tag()     { t="$1"; shift; log "\t$t${*:+: $*}" ;}
 error()   { tag ERROR "$*"; exit 1 ;}
 warn()    { tag WARN  "$*"  ;}
