@@ -7,8 +7,8 @@ cd "$DIR"
 
 cleanup() {
 	preserve() { [ -f "$WORK/$1" ] && cp "$WORK/$1" "$OUTPUT/" ;}
-
 	preserve debootstrap/debootstrap.log
+
 	exec bash # TODO: temporary
 }
 trap cleanup EXIT
@@ -18,13 +18,14 @@ date +'%n%n[%T %F] Build started' >>"$LOGFILE"
 
 
 section 'Checking environment'
-# Make sure all dependencies in `./depends` are installed on the host OS
-if ! missing="$(decomment < ./depends | has_deps)"; then
-	error "Missing dependency: $missing"
-fi
-
 if [ "$(id -u)" != "0" ]; then
 	error 'Please run as root'
+fi
+
+# Make sure all dependencies in `./depends` are installed on the host OS
+# src: scripts/dependencies_check
+if ! missing="$(decomment < ./depends | has_deps)"; then
+	error "Missing dependency: $missing"
 fi
 ok
 
@@ -74,15 +75,17 @@ enable|1|on|true|yes)
 esac
 
 IMG_NAME="${IMG_NAME:-$(date +%Y-%m-%d)-raspios}"
-info "Goal: $IMG_NAME"
+info "Goal: $IMG_NAME.img"
 
 # Other recognized config variables that don't have defaults:
-#	$WPA_COUNTRY, $WPA_ESSID, $WPA_PASSWORD
+#	$WPA_COUNTRY
+#	$WPA_ESSID
+#	$WPA_PASSWORD
 ok
 
 
-# src: stage0/prerun.sh
-section "Bootstrapping minimal Debian to $WORK"
+# src: scripts/dependencies_check
+section 'Verify QEMU setup'
 if qemu="$(dpkg --print-architecture | grep -vE "^$ARCH$")"; then (
 	if ! cd /proc/sys/fs/binfmt_misc/ 2>/dev/null; then
 		error 'No binfmt_misc support in kernel. Try running:\n' \
@@ -94,9 +97,13 @@ if qemu="$(dpkg --print-architecture | grep -vE "^$ARCH$")"; then (
 		      '	and enabling it failed.\n'
 	fi
 
-	info "Use QEMU to generate '$ARCH' on '$qemu'"
+	info "Needed for '$ARCH' on '$qemu'"
 ) fi
+ok
 
+
+# src: stage0/prerun.sh
+section "Bootstrapping minimal Debian to $WORK"
 keyring="$FILES/raspberrypi.gpg"
 if is_arm64; then
 	keyring="$FILES/debian.gpg"
