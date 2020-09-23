@@ -198,10 +198,13 @@ export QUILT_NO_DIFF_INDEX=1
 export QUILT_NO_DIFF_TIMESTAMPS=1
 export QUILT_REFRESH_ARGS="-p ab"
 
-# shellcheck source=scripts/dependencies_check.sh
-source "${SCRIPT_DIR}/dependencies_check.sh"
-
-dependencies_check "${BASE_DIR}/depends"
+# TODO: It was in dependencies_check for some reason… Handle later.
+#if ! grep -q "/proc/sys/fs/binfmt_misc" /proc/mounts; then
+#	echo "Module binfmt_misc not loaded in host"
+#	echo "Please run:"
+#	echo "  sudo modprobe binfmt_misc"
+#	exit 1
+#fi
 
 #check username is valid
 if [[ ! "$FIRST_USER_NAME" =~ ^[a-z][-a-z0-9_]*$ ]]; then

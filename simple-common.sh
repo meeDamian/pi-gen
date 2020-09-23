@@ -45,3 +45,18 @@ Tag()   {( tag="$1"; shift; logf '\t%s%b' "$tag" "${1:+: $*}" )}
 OK()    { Tag OK    "$*" ;}
 Warn()  { Tag WARN  "$*" | _log "$WARNFILE" ;}
 Error() { Tag ERROR "$*"; exit 1 ;}
+
+
+
+#
+## Various UTILITY functions
+#
+decomment() { sed -e 's/[[:blank:]]*#.*$//' -e '/^[[:blank:]]*$/d' ;}
+has_deps() {
+	while IFS=: read -r binary package; do
+		if [ ! -x "$(command -v "$binary")" ]; then
+			echo "${package:-$binary}"
+			return 1
+		fi
+	done
+}

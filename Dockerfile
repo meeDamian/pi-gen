@@ -28,7 +28,7 @@ RUN apt-get -y install --no-install-recommends \
     zerofree         \
     zip
 
-COPY simple-common.sh simple.sh  /pi-gen/
+COPY dependencies simple-common.sh simple.sh  /pi-gen/
 
 WORKDIR /pi-gen/
 ENTRYPOINT ["/pi-gen/simple.sh"]
