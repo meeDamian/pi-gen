@@ -129,7 +129,7 @@ export DEPLOY_ZIP="${DEPLOY_ZIP:-1}"
 
 export TARGET_HOSTNAME=${TARGET_HOSTNAME:-raspberrypi}
 
-export FIRST_USER_PASS=${FIRST_USER_PASS:-raspberry}
+
 export RELEASE=${RELEASE:-buster}
 export WPA_ESSID
 export WPA_PASSWORD
