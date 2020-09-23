@@ -204,8 +204,6 @@ export QUILT_NO_DIFF_INDEX=1
 export QUILT_NO_DIFF_TIMESTAMPS=1
 export QUILT_REFRESH_ARGS="-p ab"
 
-# shellcheck source=scripts/common.sh
-source "${SCRIPT_DIR}/common.sh"
 # shellcheck source=scripts/dependencies_check.sh
 source "${SCRIPT_DIR}/dependencies_check.sh"
 
