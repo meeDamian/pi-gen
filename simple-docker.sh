@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-# Optional config
+# Optional extra config
 if [ -s "$1" ]; then
 	conf2_name="$(basename "$1")"
 	conf2="$(cd "$(dirname "$1")" && pwd)/$conf2_name"
