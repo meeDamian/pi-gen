@@ -120,8 +120,6 @@ run_stage(){
 
 export PI_GEN=${PI_GEN:-pi-gen}
 
-export USE_QEMU="${USE_QEMU:-0}"
-
 export SCRIPT_DIR="${BASE_DIR}/scripts"
 
 export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
@@ -154,13 +152,6 @@ export QUILT_NO_DIFF_INDEX=1
 export QUILT_NO_DIFF_TIMESTAMPS=1
 export QUILT_REFRESH_ARGS="-p ab"
 
-# TODO: It was in dependencies_check for some reason… Handle later.
-#if ! grep -q "/proc/sys/fs/binfmt_misc" /proc/mounts; then
-#	echo "Module binfmt_misc not loaded in host"
-#	echo "Please run:"
-#	echo "  sudo modprobe binfmt_misc"
-#	exit 1
-#fi
 
 if [[ -n "${APT_PROXY}" ]] && ! curl --silent "${APT_PROXY}" >/dev/null ; then
 	echo "Could not reach APT_PROXY server: ${APT_PROXY}"

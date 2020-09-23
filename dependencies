@@ -10,7 +10,6 @@ grep
 lsmod:kmod
 mkdosfs:dosfstools
 parted
-qemu-arm-static:qemu-user-static
 quilt
 realpath:coreutils
 rsync

@@ -19,6 +19,7 @@ stop_docker() {
 trap stop_docker INT TERM
 
 exec docker run --rm -it \
+	--privileged \
 	--name="$DOCKER_NAME" \
 	--volume="$(pwd)/out/:/pi-gen/out/" \
 	--volume="$(pwd)/config:/pi-gen/config:ro" \

@@ -61,3 +61,7 @@ has_deps() {
 		fi
 	done
 }
+
+is_arm64() { [ "$1" = "arm64" ] ;}
+is_armhf() { [ "$1" = "armhf" ] ;}
+is_arm()   { [ "$1" != "${1#arm}" ] ;}
