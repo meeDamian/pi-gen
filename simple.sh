@@ -48,6 +48,9 @@ fi
 
 GH="https://github.com/meeDamian/pi-gen"
 
+HOST="${HOST:-raspberrypi}"
+Configuration 'Hostname' "$HOST"
+
 USER="${USER:-pi}"
 if ! echo "$USER" | grep -qE '^[a-z][-a-z0-9_]*$'; then
 	Error "Invalid USER name: $USER"
