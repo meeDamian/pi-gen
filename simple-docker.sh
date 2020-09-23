@@ -12,4 +12,7 @@ stop_docker() {
 }
 trap stop_docker INT TERM
 
-exec docker run --rm -it --name="$DOCKER_NAME" "$DOCKER_TAG"
+exec docker run --rm -it \
+	--name="$DOCKER_NAME" \
+	--volume="$(pwd)/out/:/pi-gen/out/" \
+	"$DOCKER_TAG"

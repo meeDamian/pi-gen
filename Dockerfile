@@ -30,5 +30,7 @@ RUN apt-get -y install --no-install-recommends \
 
 COPY dependencies simple-common.sh simple.sh  /pi-gen/
 
+VOLUME /pi-gen/out/
+
 WORKDIR /pi-gen/
 ENTRYPOINT ["/pi-gen/simple.sh"]
