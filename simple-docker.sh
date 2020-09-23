@@ -1,5 +1,11 @@
 #!/bin/sh -e
 
+# Optional config
+if [ -s "$1" ]; then
+	conf2_name="$(basename "$1")"
+	conf2="$(cd "$(dirname "$1")" && pwd)/$conf2_name"
+fi
+
 DOCKER_TAG=pi-gen
 DOCKER_NAME="$DOCKER_TAG-container"
 
@@ -15,4 +21,7 @@ trap stop_docker INT TERM
 exec docker run --rm -it \
 	--name="$DOCKER_NAME" \
 	--volume="$(pwd)/out/:/pi-gen/out/" \
-	"$DOCKER_TAG"
+	--volume="$(pwd)/config:/pi-gen/config:ro" \
+	${conf2:+--volume="$conf2:/pi-gen/$conf2_name:ro"} \
+	"$DOCKER_TAG" \
+	"${conf2:+/pi-gen/$conf2_name}"

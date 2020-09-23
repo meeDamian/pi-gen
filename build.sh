@@ -118,25 +118,6 @@ run_stage(){
 }
 
 
-
-if [ -f config ]; then
-	# shellcheck disable=SC1091
-	source config
-fi
-
-while getopts "c:" flag
-do
-	case "$flag" in
-		c)
-			EXTRA_CONFIG="$OPTARG"
-			# shellcheck disable=SC1090
-			source "$EXTRA_CONFIG"
-			;;
-		*)
-			;;
-	esac
-done
-
 export PI_GEN=${PI_GEN:-pi-gen}
 export PI_GEN_REPO=${PI_GEN_REPO:-https://github.com/RPi-Distro/pi-gen}
 

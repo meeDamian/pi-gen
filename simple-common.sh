@@ -1,5 +1,3 @@
-
-# src: build.sh #L125
 DIR="$(cd "${0%/*}" && pwd)"
 _basename="$(basename "${0%.*}")"
 
@@ -39,6 +37,8 @@ logf() {(
 )}
 
 Step()  { log "\n$*" ;}
+
+Info()  { log "\t->" "$*" ;}
 
 Tag()   {( tag="$1"; shift; logf '\t%s%b' "$tag" "${1:+: $*}" )}
 
