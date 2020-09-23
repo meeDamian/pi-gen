@@ -70,6 +70,20 @@ case "$ARCH" in
 esac
 Configuration 'Target arch' "$ARCH"
 
+RELEASE="${RELEASE:-buster}"
+Configuration 'Debian release' "$RELEASE"
+
+if empty "$MIRROR"; then
+	MIRROR='http://deb.debian.org/debian'
+	if ! is_arm64 "$ARCH"; then
+		MIRROR='http://raspbian.raspberrypi.org/raspbian'
+	fi
+fi
+Configuration 'Source mirror' "${MIRROR:-"Debian's default"}"
+
+Configuration 'Variant' "${VARIANT:-"Deboostrap's default"}"
+
+
 LOCALE_DEFAULT="${LOCALE_DEFAULT:-en_GB.UTF-8}"
 Configuration 'Locale' "$LOCALE_DEFAULT"
 
@@ -128,3 +142,43 @@ if [ "$ARCH" != "$HOST_ARCH" ] && ! is_arm "$HOST_ARCH"; then
 else
 	OK 'qemu not needed'
 fi
+
+
+Step "Bootstrap minimal Debian to $WORK"
+if is_armhf "$ARCH"; then
+	keyring="$FILES/raspberrypi.gpg"
+fi
+
+if [ "$VARIANT" = "minbase" ]; then
+	include="gnupg"
+fi
+
+flags="--arch=$ARCH ${QEMU:+--foreign} \
+	--components='main,contrib,non-free' \
+	--log-extra-deps \
+	--force-check-gpg \
+	--cache-dir='$CACHE' \
+	--keep-debootstrap-dir \
+	${VARIANT:+--variant="$VARIANT"} \
+	${include:+--include="$include"} \
+	${keyring:+--keyring="$keyring"}"
+if ! run1 debootstrap "$flags" "$RELEASE" "$WORK" "$MIRROR"; then
+	Error 'Unable to bootstrap'
+fi
+unset flags keyring include
+
+# When QEMU-emulated 2nd stage is required
+if ! empty "$QEMU"; then
+	OK 'First stage complete'
+
+	Step 'Bootstrap second-stage'
+	guard usr/bin/ 755
+	cp "$QEMU" "$WORK/usr/bin/"
+
+	Info "Warning(s) below about mount failures can be ignored safely (if run in Docker)"
+	chroot_run1 /debootstrap/debootstrap --second-stage --keep-debootstrap-dir
+fi
+
+preserve debootstrap/debootstrap.log
+discard debootstrap/
+OK

@@ -22,6 +22,7 @@ exec docker run --rm -it \
 	--privileged \
 	--name="$DOCKER_NAME" \
 	--volume="$(pwd)/out/:/pi-gen/out/" \
+	--volume="$(pwd)/cache/:/pi-gen/cache/" \
 	--volume="$(pwd)/config:/pi-gen/config:ro" \
 	${conf2:+--volume="$conf2:/pi-gen/$conf2_name:ro"} \
 	"$DOCKER_TAG" \

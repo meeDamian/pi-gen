@@ -1,25 +1,3 @@
-bootstrap(){
-	local BOOTSTRAP_CMD=debootstrap
-	local BOOTSTRAP_ARGS=()
-
-	#export http_proxy=${APT_PROXY}
-
-
-#	BOOTSTRAP_ARGS+=(--arch arm64)
-	BOOTSTRAP_ARGS+=(--include gnupg)
-	BOOTSTRAP_ARGS+=(--components "main,contrib,non-free")
-	#BOOTSTRAP_ARGS+=(--keyring "${STAGE_DIR}/files/raspberrypi.gpg")
-	BOOTSTRAP_ARGS+=("$@")
-	printf -v BOOTSTRAP_STR '%q ' "${BOOTSTRAP_ARGS[@]}"
-
-	capsh --drop=cap_setfcap -- -c "'${BOOTSTRAP_CMD}' $BOOTSTRAP_STR" || true
-
-	if [ -d "$2/debootstrap" ]; then
-		rmdir "$2/debootstrap"
-	fi
-}
-export -f bootstrap
-
 copy_previous(){
 	if [ ! -d "${PREV_ROOTFS_DIR}" ]; then
 		echo "Previous stage rootfs not found"
@@ -65,27 +43,6 @@ unmount_image(){
 	done
 }
 export -f unmount_image
-
-on_chroot() {
-	if ! mount | grep -q "$(realpath "${ROOTFS_DIR}"/proc)"; then
-		mount -t proc proc "${ROOTFS_DIR}/proc"
-	fi
-
-	if ! mount | grep -q "$(realpath "${ROOTFS_DIR}"/dev)"; then
-		mount --bind /dev "${ROOTFS_DIR}/dev"
-	fi
-	
-	if ! mount | grep -q "$(realpath "${ROOTFS_DIR}"/dev/pts)"; then
-		mount --bind /dev/pts "${ROOTFS_DIR}/dev/pts"
-	fi
-
-	if ! mount | grep -q "$(realpath "${ROOTFS_DIR}"/sys)"; then
-		mount --bind /sys "${ROOTFS_DIR}/sys"
-	fi
-
-	setarch linux32 capsh --drop=cap_setfcap "--chroot=${ROOTFS_DIR}/" -- -e "$@"
-}
-export -f on_chroot
 
 update_issue() {
 	echo -e "Raspberry Pi reference ${IMG_DATE}\nGenerated using ${PI_GEN}, ${PI_GEN_REPO}, ${GIT_HASH}, ${1}" > "${ROOTFS_DIR}/etc/rpi-issue"

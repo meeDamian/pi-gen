@@ -1,13 +1,16 @@
 DIR="$(cd "${0%/*}" && pwd)"
 _basename="$(basename "${0%.*}")"
 
-WORK="$DIR/work"
-OUTPUT="$DIR/out"
+FILES="$DIR/files" # 1. Files used to bootstrap built OS
+WORK="$DIR/work"   # 2. Directory where bootstrapping happens
+CACHE="$DIR/cache" # 3. Debootstrap's packages caches
+OUTPUT="$DIR/out"  # 4. Location for the final image produced, logs, etc
+
+DEST="$WORK"
+
 
 LOGFILE="$OUTPUT/$_basename.log"
 WARNFILE="$OUTPUT/$_basename-warn.log"
-
-
 log_start() {
 	if [ -s "$1" ]; then
 		tee -a "${1%.log}.old.log" < "$1"
@@ -18,11 +21,12 @@ log_start() {
 
 # IMPORTANT: run after importing this script
 common_init() {
-	mkdir -p "$OUTPUT" "$WORK"
+	mkdir -p "$OUTPUT" "$WORK" "$CACHE"
 
 	log_start "$LOGFILE"
 	log_start "$WARNFILE"
 }
+
 
 
 #
@@ -47,6 +51,73 @@ Warn()  { Tag WARN  "$*" | _log "$WARNFILE" ;}
 Error() { Tag ERROR "$*"; exit 1 ;}
 
 Configuration() { logf '\t-> %-16s %b' "$1:" "${2:--}" ;}
+File()          { logf '\t-> %-7s %b%b' "$1:" "$2" "${3:+ $3}" ;}
+Command()       { logf '\t   $ %b' "$*" ;}
+
+
+
+#
+## FILE manipulation functions
+#
+mk_dir() { install -Dm "${2:-644}" ${3:+-o "$3" -g "$3"} -d "$DEST/$1" && File 'dir' "$1" ;}
+guard() { [ -d "$DEST/${1%/*}" ] || mk_dir "${1%/*}" "$2" "$3" ;}
+
+preserve() { [ -s "$DEST/$1" ] && cp "$DEST/$1" "$OUTPUT/" && File 'keep' "$1" ;}
+discard() {(
+	cd "$DEST" || exit
+
+	highlight() { echo "$1" | grep -E --color=always "^${const:+|$const}" ;}
+
+	# `sed` trims all leading/trailing '*'s
+	#   and converts any '*' sequence left into '|' (grep's OR)
+	const="$(echo "$1" | sed -nE 's ^\**|\**$  g; s \*+ | gp' || true)"
+
+	File 'del' "$(highlight "$1")"
+	for match in $1; do
+		if [ "$match" != "$1" ]; then
+			i="$((i + 1))"
+			logf '\t   del+%-3s %s' "$i:" "$(highlight "$match")"
+		fi
+		rm -rf "$match" || Error "Unable to remove" "$match"
+	done
+	[ -z "$i" ] || log # `$i` is only set if passed argument contained wildcards, and was matched more than once
+)}
+
+
+#
+## CHROOT functions
+#
+compact() { echo "$*" | sed -E 's|^.?-c ||' | tr '\t' ' ' | tr -d '\n' | tr -s '[:blank:]' ;}
+
+run() {
+	chroot="$1"
+	shift || true
+
+	if ! empty "$chroot"; then
+		mounted() { mount | grep -q "$(realpath  "$chroot/$1")"; }
+		mounted proc    || mount -t proc proc    "$chroot/proc"
+		mounted dev     || mount --bind /dev     "$chroot/dev"
+		mounted dev/pts || mount --bind /dev/pts "$chroot/dev/pts"
+		mounted sys     || mount --bind /sys     "$chroot/sys"
+
+		case "$ARCH" in
+			arm64) as=linux64 ;;
+			armhf) as=linux32 ;;
+		esac
+	fi
+
+	if ! empty "$*"; then
+		Command "${chroot:+chroot${as:+($as)} $}" "$(compact "$*")"
+	fi
+
+	${as:+setarch $as} capsh --drop=cap_setfcap ${chroot:+--chroot="$chroot"} -- -e "$@"
+}
+
+run1() { run '' -c "$*" ;}
+
+chroot_run()  { run "$DEST/"    "$@" ;}
+chroot_run1() { run "$DEST/" -c "$*" ;}
+
 
 
 #
@@ -65,3 +136,5 @@ has_deps() {
 is_arm64() { [ "$1" = "arm64" ] ;}
 is_armhf() { [ "$1" = "armhf" ] ;}
 is_arm()   { [ "$1" != "${1#arm}" ] ;}
+
+empty() { [ -z "$1" ] ;}
