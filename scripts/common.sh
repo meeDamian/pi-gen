@@ -1,8 +1,3 @@
-log (){
-	date +"[%T] $*" | tee -a "${LOG_FILE}"
-}
-export -f log
-
 bootstrap(){
 	local BOOTSTRAP_CMD=debootstrap
 	local BOOTSTRAP_ARGS=()
