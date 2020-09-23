@@ -47,3 +47,9 @@ if [ -f "$IMG" ]; then
 fi
 
 GH="https://github.com/meeDamian/pi-gen"
+
+USER="${USER:-pi}"
+if ! echo "$USER" | grep -qE '^[a-z][-a-z0-9_]*$'; then
+	Error "Invalid USER name: $USER"
+fi
+Configuration 'Username' "$USER"

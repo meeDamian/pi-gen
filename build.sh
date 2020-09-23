@@ -129,7 +129,6 @@ export DEPLOY_ZIP="${DEPLOY_ZIP:-1}"
 
 export TARGET_HOSTNAME=${TARGET_HOSTNAME:-raspberrypi}
 
-export FIRST_USER_NAME=${FIRST_USER_NAME:-pi}
 export FIRST_USER_PASS=${FIRST_USER_PASS:-raspberry}
 export RELEASE=${RELEASE:-buster}
 export WPA_ESSID
@@ -175,12 +174,6 @@ export QUILT_REFRESH_ARGS="-p ab"
 #	echo "  sudo modprobe binfmt_misc"
 #	exit 1
 #fi
-
-#check username is valid
-if [[ ! "$FIRST_USER_NAME" =~ ^[a-z][-a-z0-9_]*$ ]]; then
-	echo "Invalid FIRST_USER_NAME: $FIRST_USER_NAME"
-	exit 1
-fi
 
 if [[ -n "${APT_PROXY}" ]] && ! curl --silent "${APT_PROXY}" >/dev/null ; then
 	echo "Could not reach APT_PROXY server: ${APT_PROXY}"
