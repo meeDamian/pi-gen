@@ -1,15 +1,33 @@
-FROM debian:buster
+FROM debian:buster-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get -y update && \
-    apt-get -y install --no-install-recommends \
-        git vim parted \
-        quilt coreutils qemu-user-static debootstrap zerofree zip dosfstools \
-        bsdtar libcap2-bin rsync grep udev xz-utils curl xxd file kmod bc\
-        binfmt-support ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get -y update
+RUN apt-get -y install --no-install-recommends \
+    bc               \
+    binfmt-support   \
+    bsdtar           \
+    ca-certificates  \
+    coreutils        \
+    curl             \
+    debootstrap      \
+    dosfstools       \
+    file             \
+    git              \
+    grep             \
+    kmod             \
+    libcap2-bin      \
+    parted           \
+    qemu-user-static \
+    quilt            \
+    rsync            \
+    udev             \
+    vim              \
+    xxd              \
+    xz-utils         \
+    zerofree         \
+    zip
 
 COPY . /pi-gen/
 
-VOLUME [ "/pi-gen/work", "/pi-gen/deploy"]
+VOLUME /pi-gen/work/ /pi-gen/deploy/
