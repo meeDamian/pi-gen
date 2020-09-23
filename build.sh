@@ -123,7 +123,7 @@ export PI_GEN=${PI_GEN:-pi-gen}
 export USE_QEMU="${USE_QEMU:-0}"
 
 export SCRIPT_DIR="${BASE_DIR}/scripts"
-export WORK_DIR="${WORK_DIR:-"${BASE_DIR}/work/${IMG_DATE}-${IMG_NAME}"}"
+
 export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
 export DEPLOY_ZIP="${DEPLOY_ZIP:-1}"
 
@@ -177,8 +177,7 @@ if [[ "${PUBKEY_ONLY_SSH}" = "1" && -z "${PUBKEY_SSH_FIRST_USER}" ]]; then
 	exit 1
 fi
 
-mkdir -p "${WORK_DIR}"
-log "Begin ${BASE_DIR}"
+
 
 STAGE_LIST=${STAGE_LIST:-${BASE_DIR}/stage*}
 

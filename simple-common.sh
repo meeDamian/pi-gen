@@ -1,7 +1,7 @@
 DIR="$(cd "${0%/*}" && pwd)"
 _basename="$(basename "${0%.*}")"
 
-
+WORK="$DIR/work"
 OUTPUT="$DIR/out"
 
 LOGFILE="$OUTPUT/$_basename.log"
@@ -18,7 +18,7 @@ log_start() {
 
 # IMPORTANT: run after importing this script
 common_init() {
-	mkdir -p "$OUTPUT"
+	mkdir -p "$OUTPUT" "$WORK"
 
 	log_start "$LOGFILE"
 	log_start "$WARNFILE"
