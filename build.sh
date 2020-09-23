@@ -117,10 +117,6 @@ run_stage(){
 	log "End ${STAGE_DIR}"
 }
 
-if [ "$(id -u)" != "0" ]; then
-	echo "Please run as root" 1>&2
-	exit 1
-fi
 
 
 if [ -f config ]; then
