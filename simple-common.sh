@@ -46,6 +46,7 @@ OK()    { Tag OK    "$*" ;}
 Warn()  { Tag WARN  "$*" | _log "$WARNFILE" ;}
 Error() { Tag ERROR "$*"; exit 1 ;}
 
+Configuration() { logf '\t-> %-16s %b' "$1:" "${2:--}" ;}
 
 
 #

@@ -35,3 +35,15 @@ Step 'Load config'
 # shellcheck disable=SC1090
 [ -s "$1" ] && . "$1" && Info "Imported: $1"
 OK
+
+
+Step 'Process loaded config(s)'
+IMG_DATE="$(date +%F)"
+IMG_NAME="${IMG_NAME:-$IMG_DATE-raspios}.img"
+IMG="$OUTPUT/$IMG_NAME"
+Configuration 'Output image' "$IMG"
+if [ -f "$IMG" ]; then
+	Error "$IMG already exists."
+fi
+
+GH="https://github.com/meeDamian/pi-gen"
