@@ -72,3 +72,7 @@ Configuration 'Keymap' "$KEYBOARD_KEYMAP"
 
 KEYBOARD_LAYOUT="${KEYBOARD_LAYOUT:-English (UK)}"
 Configuration 'Keyboard' "$KEYBOARD_LAYOUT"
+
+Configuration 'WiFi Country'  "$WPA_COUNTRY"
+Configuration 'WiFi SSID'     "$WPA_ESSID"
+Configuration 'WiFi password' "$(echo "$WPA_PASSWORD" | sed 's|.|*|g')"

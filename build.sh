@@ -128,9 +128,6 @@ export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
 export DEPLOY_ZIP="${DEPLOY_ZIP:-1}"
 
 export RELEASE=${RELEASE:-buster}
-export WPA_ESSID
-export WPA_PASSWORD
-export WPA_COUNTRY
 export ENABLE_SSH="${ENABLE_SSH:-0}"
 export PUBKEY_ONLY_SSH="${PUBKEY_ONLY_SSH:-0}"
 
