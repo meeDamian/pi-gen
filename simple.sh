@@ -59,3 +59,16 @@ Configuration 'Username' "$USER"
 
 PASS="${PASS:-raspberry}"
 Configuration 'Password' "$(echo "$PASS" | sed 's|.|*|g')"
+
+
+LOCALE_DEFAULT="${LOCALE_DEFAULT:-en_GB.UTF-8}"
+Configuration 'Locale' "$LOCALE_DEFAULT"
+
+TIMEZONE_DEFAULT="${TIMEZONE_DEFAULT:-Europe/London}"
+Configuration 'Timezone' "$TIMEZONE_DEFAULT"
+
+KEYBOARD_KEYMAP="${KEYBOARD_KEYMAP:-gb}"
+Configuration 'Keymap' "$KEYBOARD_KEYMAP"
+
+KEYBOARD_LAYOUT="${KEYBOARD_LAYOUT:-English (UK)}"
+Configuration 'Keyboard' "$KEYBOARD_LAYOUT"
