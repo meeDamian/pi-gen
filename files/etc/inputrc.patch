@@ -1,0 +1,5 @@
+67a68,71
+> 
+> # mappings for up and down arrows search history
+> # "\e[B": history-search-forward
+> # "\e[A": history-search-backward
