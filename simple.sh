@@ -322,3 +322,13 @@ OK 'Init state for systemctl services'
 
 # Get rid of keys so they can be re-generated on first boot
 discard 'etc/ssh/ssh_host_*_key*'
+
+chroot_run <<EOF
+for GRP in input spi i2c gpio; do
+	groupadd -f -r "\$GRP"
+done
+
+for GRP in adm dialout cdrom audio users sudo video games plugdev input gpio spi i2c netdev; do
+	adduser "$USER" "\$GRP"
+done
+EOF
