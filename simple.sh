@@ -332,3 +332,7 @@ for GRP in adm dialout cdrom audio users sudo video games plugdev input gpio spi
 	adduser "$USER" "\$GRP"
 done
 EOF
+
+chroot_run1 setupcon --force --save-only -v
+chroot_run1 usermod --pass='*' root
+OK
