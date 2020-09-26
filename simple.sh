@@ -344,3 +344,29 @@ chroot_install wpasupplicant wireless-tools raspberrypi-net-mods dhcpcd5 net-too
 
 transfer etc/systemd/system/dhcpcd.service.d/wait.conf
 transfer etc/wpa_supplicant/wpa_supplicant.conf 600
+
+if ! empty "$WPA_COUNTRY"; then
+	append "country=$WPA_COUNTRY" etc/wpa_supplicant/wpa_supplicant.conf
+fi
+
+if ! empty "$WPA_ESSID"; then
+	network=
+	if ! empty "$WPA_PASSWORD"; then
+		if ! network="$(chroot_run1 wpa_passphrase "$WPA_ESSID" "$WPA_PASSWORD")"; then
+			Warn "$network"
+			network=
+		fi
+
+	else
+		network="
+
+network={
+	ssid=\"$WPA_ESSID\"
+	key_mgmt=NONE
+}"
+	fi
+
+	if ! empty "$network"; then
+		append "$network" etc/wpa_supplicant/wpa_supplicant.conf
+	fi
+fi
