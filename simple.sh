@@ -370,3 +370,12 @@ network={
 		append "$network" etc/wpa_supplicant/wpa_supplicant.conf
 	fi
 fi
+unset network
+
+# Disable wifi on 5GHz models, if WPA_COUNTRY is not set.
+(
+	SIGNAL="$(! empty "$WPA_COUNTRY"; echo "$?")"
+	write "$SIGNAL" var/lib/systemd/rfkill/platform-3f300000.mmcnr:wlan
+	write "$SIGNAL" var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan
+)
+OK
