@@ -233,3 +233,8 @@ Info "Select $LOCALE_DEFAULT"
 Info 'Install locales'
 chroot_install locales
 OK
+
+
+Step 'Install firmware'
+chroot_install raspberrypi-bootloader raspberrypi-kernel
+OK
