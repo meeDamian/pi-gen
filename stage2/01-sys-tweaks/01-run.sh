@@ -1,8 +1,5 @@
 #!/bin/bash -e
 
-install -d				"${ROOTFS_DIR}/etc/systemd/system/rc-local.service.d"
-install -m 644 files/ttyoutput.conf	"${ROOTFS_DIR}/etc/systemd/system/rc-local.service.d/"
-
 install -m 644 files/50raspi		"${ROOTFS_DIR}/etc/apt/apt.conf.d/"
 
 install -m 644 files/console-setup   	"${ROOTFS_DIR}/etc/default/"

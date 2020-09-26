@@ -302,3 +302,4 @@ patch_file etc/login.defs
 patch_file etc/profile
 
 transfer etc/init.d/resize2fs_once 755
+transfer etc/systemd/system/rc-local.service.d/ttyoutput.conf
