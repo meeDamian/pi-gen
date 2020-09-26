@@ -12,31 +12,6 @@ if [ "${PUBKEY_ONLY_SSH}" = "1" ]; then
 s/^#?[[:blank:]]*PasswordAuthentication[[:blank:]]*yes[[:blank:]]*$/PasswordAuthentication no/' "${ROOTFS_DIR}"/etc/ssh/sshd_config
 fi
 
-on_chroot << EOF
-systemctl disable hwclock.sh
-systemctl disable nfs-common
-systemctl disable rpcbind
-if [ "${ENABLE_SSH}" == "1" ]; then
-	systemctl enable ssh
-else
-	systemctl disable ssh
-fi
-systemctl enable regenerate_ssh_host_keys
-EOF
-
-if [ "${USE_QEMU}" = "1" ]; then
-	echo "enter QEMU mode"
-	install -m 644 files/90-qemu.rules "${ROOTFS_DIR}/etc/udev/rules.d/"
-	on_chroot << EOF
-systemctl disable resize2fs_once
-EOF
-	echo "leaving QEMU mode"
-else
-	on_chroot << EOF
-systemctl enable resize2fs_once
-EOF
-fi
-
 on_chroot <<EOF
 for GRP in input spi i2c gpio; do
 	groupadd -f -r "\$GRP"

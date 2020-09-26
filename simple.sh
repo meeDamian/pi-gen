@@ -306,3 +306,16 @@ transfer etc/systemd/system/rc-local.service.d/ttyoutput.conf
 transfer etc/apt/apt.conf.d/50raspi
 transfer etc/default/console-setup
 transfer etc/rc.local 755
+
+if ! empty "$QEMU"; then
+	transfer etc/udev/rules.d/90-qemu.rules
+	RESIZE2FS=disable
+fi
+
+chroot_run1 systemctl disable hwclock.sh
+chroot_run1 systemctl disable nfs-common
+chroot_run1 systemctl disable rpcbind
+chroot_run1 systemctl "${SSH:-disable}" ssh
+chroot_run1 systemctl enable regenerate_ssh_host_keys
+chroot_run1 systemctl "${RESIZE2FS:-enable}" resize2fs_once
+OK 'Init state for systemctl services'
