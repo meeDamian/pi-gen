@@ -90,6 +90,13 @@ discard() {(
 	done
 	[ -z "$i" ] || log # `$i` is only set if passed argument contained wildcards, and was matched more than once
 )}
+patch_file() {
+	if ! patch --quiet "$DEST/$1" "$FILES/$1.patch"; then
+		Warn "Patching '$1' failed"
+		return 1
+	fi
+	File 'patch' "$1"
+}
 
 
 #

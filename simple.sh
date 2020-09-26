@@ -244,3 +244,18 @@ Step 'Setup /boot/'
 transfer boot/cmdline.txt
 transfer boot/config.txt
 OK
+
+
+Step "Setup users: $USER & root"
+patch_file etc/skel/.bashrc
+
+transfer etc/systemd/system/getty@tty1.service.d/noclear.conf
+transfer etc/fstab # TODO: Why now, while placeholders still unknown?
+chroot_run <<EOF
+if ! id -u "$USER" >/dev/null 2>&1; then
+	adduser --disabled-password --gecos "" "$USER"
+fi
+echo "$USER:$PASS" | chpasswd
+echo 'root:root'   | chpasswd
+EOF
+OK
