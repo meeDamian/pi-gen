@@ -238,3 +238,9 @@ OK
 Step 'Install firmware'
 chroot_install raspberrypi-bootloader raspberrypi-kernel
 OK
+
+
+Step 'Setup /boot/'
+transfer boot/cmdline.txt
+transfer boot/config.txt
+OK
