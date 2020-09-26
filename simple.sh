@@ -274,3 +274,12 @@ OK
 Step 'Install raspberrypi-specific dependencies'
 chroot_install libraspberrypi-bin libraspberrypi0 raspi-config
 OK
+
+
+Step 'Turn Debian into Raspberry Pi OS'
+(
+	export KEYBOARD_KEYMAP="$KEYBOARD_KEYMAP"
+	export KEYBOARD_LAYOUT="$KEYBOARD_LAYOUT"
+	inflated debconf-input | chroot_run1 debconf-set-selections
+)
+Info 'Keyboard preset'
