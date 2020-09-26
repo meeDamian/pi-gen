@@ -283,3 +283,6 @@ Step 'Turn Debian into Raspberry Pi OS'
 	inflated debconf-input | chroot_run1 debconf-set-selections
 )
 Info 'Keyboard preset'
+
+chroot_install --no-install-recommends cifs-utils
+Info 'Installed deps (pre)'
