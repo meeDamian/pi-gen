@@ -296,3 +296,4 @@ chroot_install ssh less fbset sudo psmisc strace ed ncdu crda console-setup keyb
 Info 'Installed deps'
 
 patch_file etc/default/useradd
+patch_file etc/dphys-swapfile
