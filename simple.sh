@@ -379,3 +379,10 @@ unset network
 	write "$SIGNAL" var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan
 )
 OK
+
+
+Step "Setup time zone"
+discard etc/localtime
+write "$TIMEZONE_DEFAULT" etc/timezone
+chroot_run1 dpkg-reconfigure -f noninteractive tzdata
+OK
