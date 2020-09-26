@@ -269,3 +269,8 @@ append "127.0.1.1	$HOST" etc/hosts
 
 symlink /dev/null etc/systemd/network/99-default.link
 OK
+
+
+Step 'Install raspberrypi-specific dependencies'
+chroot_install libraspberrypi-bin libraspberrypi0 raspi-config
+OK
