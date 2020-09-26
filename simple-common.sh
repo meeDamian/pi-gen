@@ -125,6 +125,7 @@ run1() { run '' -c "$*" ;}
 
 chroot_run()  { run "$DEST/"    "$@" ;}
 chroot_run1() { run "$DEST/" -c "$*" ;}
+chroot_install() { chroot_run1 apt-get -o APT::Acquire::Retries=3 install -y "$@" ;}
 
 
 

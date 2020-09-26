@@ -229,3 +229,7 @@ Info "Select $LOCALE_DEFAULT"
 	export LOCALE_DEFAULT="$LOCALE_DEFAULT"
 	inflated debconf-locale | chroot_run1 debconf-set-selections
 )
+
+Info 'Install locales'
+chroot_install locales
+OK
