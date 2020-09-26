@@ -10,7 +10,6 @@ grep
 lsmod:kmod
 mkdosfs:dosfstools
 parted
-quilt
 realpath:coreutils
 rsync
 xxd
