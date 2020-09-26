@@ -1,7 +1,5 @@
 #!/bin/bash -e
 
-install -m 644 files/console-setup   	"${ROOTFS_DIR}/etc/default/"
-
 install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 
 if [ -n "${PUBKEY_SSH_FIRST_USER}" ]; then

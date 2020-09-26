@@ -304,3 +304,4 @@ patch_file etc/profile
 transfer etc/init.d/resize2fs_once 755
 transfer etc/systemd/system/rc-local.service.d/ttyoutput.conf
 transfer etc/apt/apt.conf.d/50raspi
+transfer etc/default/console-setup
