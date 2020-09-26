@@ -294,3 +294,5 @@ chroot_install ssh less fbset sudo psmisc strace ed ncdu crda console-setup keyb
 	usb-modeswitch libpam-chksshpwd rpi-update libmtp-runtime rsync htop man-db policykit-1 ssh-import-id rng-tools \
 	ethtool vl805fw ntfs-3g pciutils rpi-eeprom raspinfo
 Info 'Installed deps'
+
+patch_file etc/default/useradd
