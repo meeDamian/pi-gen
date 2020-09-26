@@ -336,3 +336,9 @@ EOF
 chroot_run1 setupcon --force --save-only -v
 chroot_run1 usermod --pass='*' root
 OK
+
+
+Step 'Teach Raspberry Pi OS about radios'
+chroot_install wpasupplicant wireless-tools raspberrypi-net-mods dhcpcd5 net-tools \
+	firmware-atheros firmware-brcm80211 firmware-libertas firmware-misc-nonfree firmware-realtek
+
