@@ -386,3 +386,8 @@ discard etc/localtime
 write "$TIMEZONE_DEFAULT" etc/timezone
 chroot_run1 dpkg-reconfigure -f noninteractive tzdata
 OK
+
+
+Step "Sprinkle @meeDamian flavor of some tiny, but mighty tools"
+chroot_install git nano tree jq tmux htop ufw
+OK
