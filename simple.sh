@@ -342,3 +342,5 @@ Step 'Teach Raspberry Pi OS about radios'
 chroot_install wpasupplicant wireless-tools raspberrypi-net-mods dhcpcd5 net-tools \
 	firmware-atheros firmware-brcm80211 firmware-libertas firmware-misc-nonfree firmware-realtek
 
+transfer etc/systemd/system/dhcpcd.service.d/wait.conf
+transfer etc/wpa_supplicant/wpa_supplicant.conf 600
