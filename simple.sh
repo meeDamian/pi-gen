@@ -221,3 +221,11 @@ Info 'Update and install'
 chroot_run1 apt-get update
 chroot_run1 apt-get dist-upgrade -y
 OK
+
+
+Step 'Setup locale'
+Info "Select $LOCALE_DEFAULT"
+(
+	export LOCALE_DEFAULT="$LOCALE_DEFAULT"
+	inflated debconf-locale | chroot_run1 debconf-set-selections
+)

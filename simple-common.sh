@@ -67,6 +67,9 @@ substitute() {
 	sed -i "s|$1|$2|g" "$DEST/$3"
 	File 'subst' "$3" "($1 -> $(echo "$2" | sed -E '/^.{39}/s/(^.{21}).+(.{16})/\1…\2/g'))"
 }
+
+# Return contents of $1 with all env vars within expanded
+inflated() { envsubst < "$FILES/$1" && File 'inflate' "$1" ;}
 preserve() { [ -s "$DEST/$1" ] && cp "$DEST/$1" "$OUTPUT/" && File 'keep' "$1" ;}
 discard() {(
 	cd "$DEST" || exit
