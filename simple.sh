@@ -298,3 +298,5 @@ Info 'Installed deps'
 patch_file etc/default/useradd
 patch_file etc/dphys-swapfile
 patch_file etc/inputrc
+patch_file etc/login.defs
+patch_file etc/profile
