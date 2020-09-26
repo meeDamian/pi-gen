@@ -63,6 +63,9 @@ mk_dir() { install -Dm "${2:-644}" ${3:+-o "$3" -g "$3"} -d "$DEST/$1" && File '
 guard() { [ -d "$DEST/${1%/*}" ] || mk_dir "${1%/*}" "$2" "$3" ;}
 
 transfer()   { install -Dm "${2:-644}" "$FILES/$1" "$DEST/$1" && File 'add'    "$1" "${2:+(mod: $2)}" ;}
+append()     { guard "$2" && printf '%b' "$1" >>   "$DEST/$2" && File 'append' "$2" ;}
+write()      { guard "$2" && printf '%b' "$1" >    "$DEST/$2" && File 'put'    "$2" ;}
+symlink()    { guard "$2" && ln -sf      "$1"      "$DEST/$2" && File 'link'   "$2" "-> $1" ;}
 substitute() {
 	sed -i "s|$1|$2|g" "$DEST/$3"
 	File 'subst' "$3" "($1 -> $(echo "$2" | sed -E '/^.{39}/s/(^.{21}).+(.{16})/\1…\2/g'))"

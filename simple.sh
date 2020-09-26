@@ -259,3 +259,13 @@ echo "$USER:$PASS" | chpasswd
 echo 'root:root'   | chpasswd
 EOF
 OK
+
+
+Step 'Setup basic networking'
+chroot_install netbase
+
+write "$HOST"              etc/hostname
+append "127.0.1.1	$HOST" etc/hosts
+
+symlink /dev/null etc/systemd/network/99-default.link
+OK
