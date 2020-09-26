@@ -10,6 +10,22 @@
 #   2. Place config into `./config` file (or pass path to another config as first argument)
 #
 #
+#   3. All Capitalized Function Calls Are For Logging
+#
+#
+#   4. All code and function definitions are either here, or in `./simple-common.sh`
+#
+#
+#   5. Code below this comment is meant to be read top to bottom
+#
+#
+#   6. All 'FILE manipulation functions' operate on files in the OS being bootstrapped (target OS)
+#
+#
+#   7. Files within `files/` directory map directly onto the target OS
+#        Note: `.patch` files apply patch onto a corresponding original file
+#
+#
 
 
 
@@ -24,7 +40,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Make sure all `./dependencies` are installed on the host OS
-if ! missing="$(decomment < ./dependencies | has_deps)"; then
+if ! missing="$(decomment <./dependencies | has_deps)"; then
 	Error "Missing dependency: $missing"
 fi
 OK
@@ -83,7 +99,6 @@ Configuration 'Source mirror' "${MIRROR:-"Debian's default"}"
 
 Configuration 'Variant' "${VARIANT:-"Deboostrap's default"}"
 
-
 LOCALE_DEFAULT="${LOCALE_DEFAULT:-en_GB.UTF-8}"
 Configuration 'Locale' "$LOCALE_DEFAULT"
 
@@ -112,7 +127,7 @@ if [ "$ARCH" != "$HOST_ARCH" ] && ! is_arm "$HOST_ARCH"; then
 
 	if ! QEMU="$(
 		case "$ARCH" in
-		armhf) _arch=arm     ;;
+		armhf) _arch=arm ;;
 		arm64) _arch=aarch64 ;;
 		esac
 
@@ -132,7 +147,7 @@ if [ "$ARCH" != "$HOST_ARCH" ] && ! is_arm "$HOST_ARCH"; then
 
 		if [ ! -f register ] && ! mount binfmt_misc -t binfmt_misc "$binfmt"; then
 			Error 'binfmt_misc support in kernel present, but not enabled\n' \
-				  '	and enabling it failed.\n'
+				'	and enabling it failed.\n'
 		fi
 	fi
 	unset binfmt
@@ -181,4 +196,28 @@ fi
 
 preserve debootstrap/debootstrap.log
 discard debootstrap/
+OK
+
+
+Step 'Configure apt'
+transfer etc/apt/sources.list
+transfer etc/apt/sources.list.d/raspi.list
+
+substitute MIRROR  "$MIRROR"  etc/apt/sources.list
+substitute RELEASE "$RELEASE" etc/apt/sources.list
+substitute RELEASE "$RELEASE" etc/apt/sources.list.d/raspi.list
+
+discard etc/apt/apt.conf.d/51cache
+
+Info 'Import raspberrypi.gpg.key'
+chroot_run1 apt-key add - < "$FILES/raspberrypi.gpg.key"
+
+if is_arm64 "$ARCH"; then
+	Info "Add support for 'armhf' packages (on 'arm64' target OS)"
+	chroot_run1 dpkg --add-architecture armhf
+fi
+
+Info 'Update and install'
+chroot_run1 apt-get update
+chroot_run1 apt-get dist-upgrade -y
 OK

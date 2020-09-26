@@ -62,6 +62,11 @@ Command()       { logf '\t   $ %b' "$*" ;}
 mk_dir() { install -Dm "${2:-644}" ${3:+-o "$3" -g "$3"} -d "$DEST/$1" && File 'dir' "$1" ;}
 guard() { [ -d "$DEST/${1%/*}" ] || mk_dir "${1%/*}" "$2" "$3" ;}
 
+transfer()   { install -Dm "${2:-644}" "$FILES/$1" "$DEST/$1" && File 'add'    "$1" "${2:+(mod: $2)}" ;}
+substitute() {
+	sed -i "s|$1|$2|g" "$DEST/$3"
+	File 'subst' "$3" "($1 -> $(echo "$2" | sed -E '/^.{39}/s/(^.{21}).+(.{16})/\1…\2/g'))"
+}
 preserve() { [ -s "$DEST/$1" ] && cp "$DEST/$1" "$OUTPUT/" && File 'keep' "$1" ;}
 discard() {(
 	cd "$DEST" || exit
